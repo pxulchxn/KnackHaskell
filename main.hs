@@ -5,4 +5,3 @@ data Karte = Karte {
     art :: Art,
     wert :: Int
 }
-
