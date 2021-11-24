@@ -1,2 +1,50 @@
 # KnackHaskell
 Dieses Programm ist die Semesteraufgabe im Modul "Weitere Programmiersprache". Hierbei muss mit der Sprache Haskell ein Programm erstellt werden. Wir haben uns für das Spiel "Knack (Schwimmen)" entschieden.
+
+Regeln:
+Allgemeines:
+    - 32 Karten (Skatblatt)
+    Ziel: Am Ende nicht die geringste Punktzahl von allen Spielenden zu haben
+
+Karten:
+    - Karo
+    - Herz
+    - Pik
+    - Kreuz
+
+Wertigkeiten der Karten:
+    Karte       | Wertigkeit
+    ------------------------
+    - Ass       | 11
+    - Zehn      | 10
+    - Koenig    | 10
+    - Dame      | 10
+    - Bube      | 10
+    - Neun      | 09
+    - Acht      | 08
+    - Sieben    | 07
+
+Ablauf:
+    - es werden jeweils 3 Karten ausgeteilt
+    - jeder Spieler erhält einen "Kartenstapel"
+    - der Ausgeber teilt sich selbst 2 "Kartenstapel" aus
+        - wählt daraufhin einen Stapel aus, und entscheidet sich, ob er diesen behält oder in die Mitte legt und den anderen wählt (dieser darf nicht angeschaut werden)
+    
+    - ein Spieler kann entweder eine Karte wählen, alle drei nehmen oder schieben
+    - des weiteren kann ein Spieler auch "zumachen" (erst ab Runde 2 möglich)
+
+Spielende:
+    - Spiel wird beendet, wenn ein Spieler zumacht, jedoch dürfen die anderen Spieler nochmal eine Runde weiterspielen
+    - Knack, so wird das Spiel sofort beendet
+
+"Das Schwimmen":
+    - häufig spielt man mit 3 Leben pro Spieler
+    - hat ein Spieler alle 3 Leben verloren, so "schwimmt" er noch eine weitere Runde
+        - verliert er das Zusatzleben auch noch, so "geht er unter" und ist raus
+
+Besonderheiten:
+    - Feuer/Blitz: 
+        - drei gleichrangige Karten zählen im Allgemeinen 30,5 Punkte
+        - drei Asse sind ein "Super-Knack" und gewinnen immer und alle Spieler verlieren ein Leben
+    - schieben alle Spieler, so werden 3 neue Karten in die Mitte gelegt
+    - liegt in der Mitte eine Kombination aus 7/8/9, so werden 3 neue Karten in die Mitte gelegt
