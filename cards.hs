@@ -29,6 +29,23 @@ getHandsValueHelp list n = getHandTypValue list (getNextTyp n):
 getHandTypValue::[(Typ, Name)] -> Typ -> Int
 getHandTypValue list mainTyp = getCardValues (getSameCardTypes list mainTyp)
 
+haveNewCardsToTable::Bool
+haveNewCardsToTable = isSIEBENInCards cards && isACHTInCards cards && isNEUNInCards cards
+    where cards = getTableCards
+
+isSIEBENInCards::[(Typ, Name)] -> Bool
+isSIEBENInCards list = isNameinCards list SIEBEN
+
+isACHTInCards::[(Typ, Name)] -> Bool
+isACHTInCards list = isNameinCards list ACHT 
+
+isNEUNInCards::[(Typ, Name)] -> Bool
+isNEUNInCards list = isNameinCards list NEUN
+
+isNameinCards::[(Typ, Name)] -> Name -> Bool
+isNameinCards [] _ = False
+isNameinCards (x:xs) name = (if sameName x name then True else False) || isNameinCards xs name
+
 getCardValues::[(Typ, Name)] -> Int
 getCardValues [] = 0
 getCardValues (x:xs) = kartenWert x + getCardValues xs
@@ -55,6 +72,9 @@ getNextTyp n = (enumFrom KARO)!!n
 
 generateCards::[(Typ, Name)]
 generateCards = [(x,y) | x <- enumFrom KARO, y <- enumFrom SIEBEN]
+
+shuffleTableCards::[(Typ, Name)]
+shuffleTableCards = (take 6 getCards) ++ shuffleCards (drop 6 getCards)
 
 shuffleCards::[(Typ, Name)] -> [(Typ, Name)]
 shuffleCards list = shuffleCardsHelp list (randomNumber (length list-1))

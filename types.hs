@@ -23,9 +23,14 @@ kartenWert (_, a)
     | a == ASS = 11
     | otherwise = 10
 
+getName::(Typ, Name) -> Name
 getName (_, name) = name
+
+getTyp::(Typ, Name) -> Typ
 getTyp (typ, _) = typ
 
+sameTyp::(Typ, Name) -> Typ -> Bool
 sameTyp (typ, _) mainTyp = typ == mainTyp
 
+sameName::(Typ, Name) -> Name -> Bool
 sameName (_, name) mainName = name == mainName
