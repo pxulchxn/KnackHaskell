@@ -1,56 +1,68 @@
 module Cards where
 import Types
 import System.Random
+import Data.Array.IO
+import Control.Monad
 import System.IO.Unsafe
 
 
-getCards::[(Typ, Name)]
+getCards::[Karte]
 getCards = shuffleCards generateCards
 
-getPlayerCards::[(Typ, Name)]
+getCardsString::String
+getCardsString = cardsToString getCards
+
+cardsToString::[Karte] -> String
+cardsToString list = "[" ++ getCardsStringHelp list ++ "]"
+
+getCardsStringHelp:: [Karte] -> String
+getCardsStringHelp [] = ""
+getCardsStringHelp (x:xs) = karteToString x ++ ", " ++ getCardsStringHelp xs
+
+getPlayerCards::[Karte]
 getPlayerCards = take 3 getCards
 
-getKICards::[(Typ, Name)]
+getKICards::[Karte]
 getKICards = drop 3 (take 6 getCards)
 
-getTableCards::[(Typ, Name)]
+getTableCards::[Karte]
 getTableCards = drop 6 (take 9 getCards)
 
-getHandsHighestValue::[(Typ, Name)] -> Int
+getHandsHighestValue::[Karte] -> Int
 getHandsHighestValue list = maximum (getHandsValueHelp list 0)
 
-getHandsValueHelp::[(Typ, Name)] -> Int -> [Int]
+getHandsValueHelp::[Karte] -> Int -> [Int]
 getHandsValueHelp list n = getHandTypValue list (getNextTyp n):
                             if (n+1) < length (enumFrom KARO) then
                                  getHandsValueHelp list (n+1)
                             else
                                 [getSameCardNameValue list]
 
-getHandTypValue::[(Typ, Name)] -> Typ -> Int
+getHandTypValue::[Karte] -> Typ -> Int
 getHandTypValue list mainTyp = getCardValues (getSameCardTypes list mainTyp)
 
 haveNewCardsToTable::Bool
 haveNewCardsToTable = isSIEBENInCards cards && isACHTInCards cards && isNEUNInCards cards
     where cards = getTableCards
 
-isSIEBENInCards::[(Typ, Name)] -> Bool
+isSIEBENInCards::[Karte] -> Bool
 isSIEBENInCards list = isNameinCards list SIEBEN
 
-isACHTInCards::[(Typ, Name)] -> Bool
+isACHTInCards::[Karte] -> Bool
 isACHTInCards list = isNameinCards list ACHT 
 
-isNEUNInCards::[(Typ, Name)] -> Bool
+isNEUNInCards::[Karte] -> Bool
 isNEUNInCards list = isNameinCards list NEUN
 
-isNameinCards::[(Typ, Name)] -> Name -> Bool
+isNameinCards::[Karte] -> Name -> Bool
 isNameinCards [] _ = False
 isNameinCards (x:xs) name = (if sameName x name then True else False) || isNameinCards xs name
 
-getCardValues::[(Typ, Name)] -> Int
+getCardValues::[Karte] -> Int
 getCardValues [] = 0
 getCardValues (x:xs) = kartenWert x + getCardValues xs
 
-getSameCardNameValue::[(Typ, Name)] -> Int
+getSameCardNameValue::[Karte] -> Int
 getSameCardNameValue (x:xs) =   if length (getSameCardNames (x:xs) (getName x)) == 3 then
                                     if (getName x) == ASS then
                                         41
@@ -59,34 +71,34 @@ getSameCardNameValue (x:xs) =   if length (getSameCardNames (x:xs) (getName x)) 
                                 else
                                     0
 
-getSameCardTypes::[(Typ, Name)] -> Typ -> [(Typ, Name)]
+getSameCardTypes::[Karte] -> Typ -> [Karte]
 getSameCardTypes [] _ = []
 getSameCardTypes list mainTyp = [x | x <- list, sameTyp x mainTyp]
 
-getSameCardNames::[(Typ, Name)] -> Name -> [(Typ, Name)]
+getSameCardNames::[Karte] -> Name -> [Karte]
 getSameCardNames [] _ = []
 getSameCardNames list mainName = [x | x <- list, sameName x mainName]
 
 getNextTyp::Int -> Typ
 getNextTyp n = (enumFrom KARO)!!n
 
-generateCards::[(Typ, Name)]
-generateCards = [(x,y) | x <- enumFrom KARO, y <- enumFrom SIEBEN]
+generateCards::[Karte]
+generateCards = [Karte(x,y) | x <- enumFrom KARO, y <- enumFrom SIEBEN]
 
-shuffleTableCards::[(Typ, Name)]
+shuffleTableCards::[Karte]
 shuffleTableCards = (take 6 getCards) ++ shuffleCards (drop 6 getCards)
 
-shuffleCards::[(Typ, Name)] -> [(Typ, Name)]
+shuffleCards::[Karte] -> [Karte]
 shuffleCards list = shuffleCardsHelp list (randomNumber (length list-1))
 
-shuffleCardsHelp::[(Typ, Name)] -> Int -> [(Typ, Name)]
+shuffleCardsHelp::[Karte] -> Int -> [Karte]
 shuffleCardsHelp [] _ = []
 shuffleCardsHelp list n = list!!n: shuffleCardsHelp newList newN
     where
         newList = removeElementFromList list n
         newN = randomNumber ((length newList)-1)
 
-removeElementFromList::[(Typ, Name)] -> Int -> [(Typ, Name)]
+removeElementFromList::[Karte] -> Int -> [Karte]
 removeElementFromList [] _ = []
 removeElementFromList list (-1) = list
 removeElementFromList (x:xs) n
