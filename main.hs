@@ -4,6 +4,8 @@ import Control.Monad
 import Types
 import Cards
 
+
+-- main method runs all the time until the end
 main = do
     let x = generateCards
     let rndNumber = randomNumber (length x-1)
@@ -13,6 +15,7 @@ main = do
 
     knack cards
 
+-- checks whether the player has won and then says that the game is over or the game continues and waits for player input
 knack cards = do
     cardsTmp <- readIORef cards
 
@@ -28,7 +31,7 @@ knack cards = do
 
         spielzug cards
     
-
+-- the player can decide whether he wants to swap cards or end the game (the game status is still saved)
 spielzug cards = do
     putStrLn "Commands: swap, exit"
     aktion <- getLine
@@ -40,7 +43,7 @@ spielzug cards = do
          | otherwise -> do putStrLn "Wrong Input"
                            spielzug cards
 
-
+-- gives the player the choice of how many cards to swap
 swap cards = do
     putStrLn "(A)ll or (O)ne?"
     aktion <- getLine
@@ -51,11 +54,13 @@ swap cards = do
         | otherwise -> do putStrLn "Wrong Input!"
                           swap cards
 
+-- exchanges all cards of the player on his / her console input 
 swapAllCards cards = do
     cardsTmp <- readIORef cards
     writeIORef cards (swapAllPlayerWithTableCards cardsTmp)
     knack cards
 
+-- exchanges the player's cards on his / her console input
 swapOneCard cards = do
     cardsTmp <- readIORef cards
     putStrLn "Player Cards (1-3)"
