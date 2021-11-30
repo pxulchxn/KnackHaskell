@@ -19,7 +19,7 @@ kartenWert (Karte(_, a))
     | a == SIEBEN = 7
     | a == ACHT = 8
     | a == NEUN = 9
-    | a == ASS = 11
+    | a == ASS = 12
     | otherwise = 10
 
 getName::Karte -> Name

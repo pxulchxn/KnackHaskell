@@ -6,27 +6,24 @@ import Control.Monad
 import System.IO.Unsafe
 
 
-getCards::[Karte]
-getCards = shuffleCards generateCards
-
-getCardsString::String
-getCardsString = cardsToString getCards
+getCards::Int -> [Karte]
+getCards n = shuffleCards generateCards n
 
 cardsToString::[Karte] -> String
-cardsToString list = "[" ++ getCardsStringHelp list ++ "]"
+cardsToString (x:xs) = "[" ++ karteToString x ++ getCardsStringHelp xs ++ "]"
 
 getCardsStringHelp:: [Karte] -> String
 getCardsStringHelp [] = ""
-getCardsStringHelp (x:xs) = karteToString x ++ ", " ++ getCardsStringHelp xs
+getCardsStringHelp (x:xs) = ", " ++ karteToString x ++ getCardsStringHelp xs
 
-getPlayerCards::[Karte]
-getPlayerCards = take 3 getCards
+getPlayerCards::[Karte] -> [Karte]
+getPlayerCards cards = take 3 cards
 
-getKICards::[Karte]
-getKICards = drop 3 (take 6 getCards)
+getKICards::[Karte] -> [Karte]
+getKICards cards = drop 3 (take 6 cards)
 
-getTableCards::[Karte]
-getTableCards = drop 6 (take 9 getCards)
+getTableCards::[Karte] -> [Karte]
+getTableCards cards = drop 6 (take 9 cards)
 
 getHandsHighestValue::[Karte] -> Int
 getHandsHighestValue list = maximum (getHandsValueHelp list 0)
@@ -41,9 +38,18 @@ getHandsValueHelp list n = getHandTypValue list (getNextTyp n):
 getHandTypValue::[Karte] -> Typ -> Int
 getHandTypValue list mainTyp = getCardValues (getSameCardTypes list mainTyp)
 
-haveNewCardsToTable::Bool
-haveNewCardsToTable = isSIEBENInCards cards && isACHTInCards cards && isNEUNInCards cards
-    where cards = getTableCards
+hasPlayerWin::[Karte] -> Bool
+hasPlayerWin list = hasWin (getPlayerCards list)
+
+hasKIWin::[Karte] -> Bool
+hasKIWin list = hasWin (getKICards list)
+
+hasWin::[Karte] -> Bool
+hasWin list = getHandsHighestValue list > 31
+
+haveNewCardsToTable::[Karte] -> Bool
+haveNewCardsToTable cards = isSIEBENInCards tableCards && isACHTInCards tableCards && isNEUNInCards tableCards
+    where tableCards = getTableCards cards
 
 isSIEBENInCards::[Karte] -> Bool
 isSIEBENInCards list = isNameinCards list SIEBEN
@@ -85,11 +91,26 @@ getNextTyp n = (enumFrom KARO)!!n
 generateCards::[Karte]
 generateCards = [Karte(x,y) | x <- enumFrom KARO, y <- enumFrom SIEBEN]
 
-shuffleTableCards::[Karte]
-shuffleTableCards = (take 6 getCards) ++ shuffleCards (drop 6 getCards)
+swapPlayerWithTableCard::[Karte] -> Int -> Int -> [Karte]
+swapPlayerWithTableCard list i j = swapCards list (i-1) (j+5)
 
-shuffleCards::[Karte] -> [Karte]
-shuffleCards list = shuffleCardsHelp list (randomNumber (length list-1))
+swapAllPlayerWithTableCards::[Karte] -> [Karte]
+swapAllPlayerWithTableCards list = swapPlayerWithTableCard (swapPlayerWithTableCard (swapPlayerWithTableCard list 1 1) 2 2) 3 3
+
+swapCards::[Karte] -> Int -> Int -> [Karte]
+swapCards list i j = swapCardsHelp list i j (list!!i) (list!!j)
+
+swapCardsHelp::[Karte] -> Int -> Int -> Karte -> Karte -> [Karte]
+swapCardsHelp (x:xs) i j f g
+    | i == 0 = g : (swapCardsHelp xs (i-1) (j-1) f g)
+    | j == 0 = f : (swapCardsHelp xs (i-1) (j-1) f g)
+    | otherwise = x: (swapCardsHelp xs (i-1) (j-1) f g)
+
+shuffleTableCards::[Karte] -> Int -> [Karte]
+shuffleTableCards cards n = (take 6 cards) ++ shuffleCards (drop 6 cards) n
+
+shuffleCards::[Karte] -> Int -> [Karte]
+shuffleCards list n = shuffleCardsHelp list n
 
 shuffleCardsHelp::[Karte] -> Int -> [Karte]
 shuffleCardsHelp [] _ = []
