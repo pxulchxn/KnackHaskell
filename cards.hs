@@ -20,16 +20,12 @@ getCardsStringHelp [] = ""
 getCardsStringHelp (x:xs) = ", " ++ karteToString x ++ getCardsStringHelp xs
 
 -- returns the player's cards
-getPlayerCards::[Karte] -> [Karte]
-getPlayerCards cards = take 3 cards
-
--- returns the cards to the AI
-getKICards::[Karte] -> [Karte]
-getKICards cards = drop 3 (take 6 cards)
+getPlayerCards::[Karte] -> Int -> [Karte]
+getPlayerCards cards n = drop (3*n) (take (3*(n+1)) cards)
 
 -- returns the cards from the middle
-getTableCards::[Karte] -> [Karte]
-getTableCards cards = drop 6 (take 9 cards)
+getTableCards::[Karte] -> Int -> [Karte]
+getTableCards cards n = drop (3*n) (take (3*(n+1)) cards)
 
 -- returns the highest aggregate value of all types
 getHandsHighestValue::[Karte] -> Int
@@ -48,21 +44,17 @@ getHandTypValue::[Karte] -> Typ -> Int
 getHandTypValue list mainTyp = getCardValues (getSameCardTypes list mainTyp)
 
 -- returns the truth value of whether the player has won
-hasPlayerWin::[Karte] -> Bool
-hasPlayerWin list = hasWin (getPlayerCards list)
-
--- returns the truth value of whether AI has won
-hasKIWin::[Karte] -> Bool
-hasKIWin list = hasWin (getKICards list)
+hasPlayerWin::[Karte] -> Int -> Bool
+hasPlayerWin list n = hasWin (getPlayerCards list n)
 
 -- returns the truth value of whether someone has won
 hasWin::[Karte] -> Bool
 hasWin list = getHandsHighestValue list > 31
 
 -- returns the truth value of whether new cards have to be placed in the middle
-haveNewCardsToTable::[Karte] -> Bool
-haveNewCardsToTable cards = isSIEBENInCards tableCards && isACHTInCards tableCards && isNEUNInCards tableCards
-    where tableCards = getTableCards cards
+haveNewCardsToTable::[Karte] -> Int -> Bool
+haveNewCardsToTable cards n = isSIEBENInCards tableCards && isACHTInCards tableCards && isNEUNInCards tableCards
+    where tableCards = getTableCards cards n
 
 -- returns the truth value of whether there is a seven in the cards
 isSIEBENInCards::[Karte] -> Bool
@@ -115,12 +107,12 @@ generateCards::[Karte]
 generateCards = [Karte(x,y) | x <- enumFrom KARO, y <- enumFrom SIEBEN]
 
 -- exchanges a card between the player and the middle and gives it back
-swapPlayerWithTableCard::[Karte] -> Int -> Int -> [Karte]
-swapPlayerWithTableCard list i j = swapCards list (i-1) (j+5)
+swapPlayerWithTableCard::[Karte] -> Int -> Int -> Int -> Int -> [Karte]
+swapPlayerWithTableCard list i j currentPlayer maxAnzahl = swapCards list (i-1+currentPlayer*3) (j+maxAnzahl*3-1)
 
 -- exchanges all cards of the player with the middle and gives them back
-swapAllPlayerWithTableCards::[Karte] -> [Karte]
-swapAllPlayerWithTableCards list = swapPlayerWithTableCard (swapPlayerWithTableCard (swapPlayerWithTableCard list 1 1) 2 2) 3 3
+swapAllPlayerWithTableCards::[Karte] -> Int -> Int -> [Karte]
+swapAllPlayerWithTableCards list currentPlayer maxAnzahl = swapPlayerWithTableCard (swapPlayerWithTableCard (swapPlayerWithTableCard list 1 1 currentPlayer maxAnzahl) 2 2 currentPlayer maxAnzahl) 3 3 currentPlayer maxAnzahl
 
 -- returns a list of the cards that the player has exchanged
 swapCards::[Karte] -> Int -> Int -> [Karte]
@@ -128,14 +120,15 @@ swapCards list i j = swapCardsHelp list i j (list!!i) (list!!j) -- wofür steht 
 
 --
 swapCardsHelp::[Karte] -> Int -> Int -> Karte -> Karte -> [Karte]
+swapCardsHelp [] _ _ _ _ = []
 swapCardsHelp (x:xs) i j f g
     | i == 0 = g : (swapCardsHelp xs (i-1) (j-1) f g)
     | j == 0 = f : (swapCardsHelp xs (i-1) (j-1) f g)
     | otherwise = x: (swapCardsHelp xs (i-1) (j-1) f g)
 
 -- returns a randomly shuffled list of the cards in the middle
-shuffleTableCards::[Karte] -> Int -> [Karte]
-shuffleTableCards cards n = (take 6 cards) ++ shuffleCards (drop 6 cards) n
+shuffleTableCards::[Karte] -> Int -> Int -> [Karte]
+shuffleTableCards cards n i = (take (3*i) cards) ++ (shuffleCards (drop (3*i) cards) n)
 
 -- returns a randomly shuffled list
 shuffleCards::[Karte] -> Int -> [Karte]

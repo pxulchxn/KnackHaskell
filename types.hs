@@ -7,9 +7,11 @@ data Name = SIEBEN | ACHT | NEUN | ZEHN | BUBE | DAME | KOENIG | ASS deriving(En
 data Karte = Karte(Typ, Name) deriving (Eq, Show)
 
 data Spieler = Spieler {    --neuer Datentyp namens Spieler
-    id :: Int,              -- wichtig für Auslegen bei den Runden
-    pName :: String          -- Name des Spielers
-}
+    pId::Int,              -- wichtig für Auslegen bei den Runden
+    pName::String,          -- Name des Spielers
+    hasCheck::Bool,
+    hasClosed::Bool
+} deriving (Show, Eq)
 
 karteToString::Karte -> String
 karteToString (Karte(typ, name)) = "" ++ show typ ++ " " ++ show name
