@@ -128,7 +128,7 @@ swapCardsHelp (x:xs) i j f g
 
 -- returns a randomly shuffled list of the cards in the middle
 shuffleTableCards::[Karte] -> Int -> Int -> [Karte]
-shuffleTableCards cards n i = (take (3*i) cards) ++ (shuffleCards (drop (3*i) cards) n)
+shuffleTableCards cards n i = (take (3*i) cards) ++ (shuffleCards (drop (3*i) cards) (mod n ((length cards)-3*i)))
 
 -- returns a randomly shuffled list
 shuffleCards::[Karte] -> Int -> [Karte]

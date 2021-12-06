@@ -1,6 +1,8 @@
 import Data.IORef
 import System.Random
 import Control.Monad
+import System.Console.ANSI
+
 import Types
 import Cards
 import Player
@@ -8,6 +10,7 @@ import Player
 
 -- main method runs all the time until the end
 main = do
+    clearScreen
     ioChoosePlayers
     
 
@@ -49,10 +52,12 @@ ioKnack cards players amZug = do
     playersTmp <- readIORef players
 
     let name = getPlayerName (getPlayerFromList playersTmp amZug)
-
-    print (shuffleTableCards cardsTmp (randomNumber (length cardsTmp-1)) (length playersTmp))
+    print (length cardsTmp)
+    let y = shuffleTableCards cardsTmp (randomNumber ((length cardsTmp)-1)) (length playersTmp)
 
     when (haveNewCardsToTable cardsTmp (length playersTmp)) $ writeIORef cards (shuffleTableCards cardsTmp (randomNumber (length cardsTmp-1)) (length playersTmp))
+
+    clearScreen
 
     if (hasPlayerWin cardsTmp amZug) then do
         
