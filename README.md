@@ -110,12 +110,17 @@ Sieben | 07
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- GETTING STARTED -->
+<!-- ---------------------------------------------------------------- GETTING STARTED ---------------------------------------------------------------- -->
 ## Getting Started
 
 Hier beschreiben wir, wie dieses Programm lokal ausführbar gemacht werden kann.
 
-### Installation Haskell und Visual Studio Code
+### Installation Haskell und Visual Studio Code (Windows)
+
+1. Eingabeaufforderung (cmd) als Admin ausführen
+  <a href="https://github.com/github_username/repo_name">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a>
 
 This is an example of how to list things you need to use the software and how to install them.
 * npm
