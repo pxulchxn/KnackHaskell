@@ -115,22 +115,51 @@ Sieben | 07
 
 Hier beschreiben wir, wie dieses Programm lokal ausführbar gemacht werden kann.
 
-### Installation Haskell und Visual Studio Code (Windows)
+### Installation Chocolatey (Windows)
 
-1. Eingabeaufforderung (cmd) als Admin ausführen
-  <a href="https://github.com/github_username/repo_name">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
+1. Eingabeaufforderung (cmd) als Admin ausführen <br />![Bild cmd](img/windows10cmd.png)
+2. Den Befehl aus dem Pastebin (https://pastebin.com/dqBB532d) kopieren und in die Kommandozeile (cmd) einfügen und dann ausführen.
+```sh
+   @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin" 
+   ```
+3. Überprüfen, ob Chocolatey installiert ist mit:
+  ```sh
+  choco --version
+  ```
+### Installation der Haskell-Plattform (Windows)
+
+1. Folgenden Befehl in der cmd oder PowerShell eingeben:
+  ```sh
+  choco install haskell-dev
+  ```
+  Dabei kann es passieren das am Ende der Installation wiederholt ein
+Systemupdate durchgeführt wird, ohne dass die Installation beendet wird. In
+diesem Fall kann der Vorgang mit Strg + C in der Konsole beendet werden.
+
+2. Schließen der Konsole und Überprüfen der Installation mit:
+  ```sh
+  ghc --version
+  ```
+  und 
+  ```sh
+  cabal --version
+  ```
+### Einrichten von Haskell in Visual Studio Code (Windows)
+
+1. Visual Studio Code herunterladen und installieren: [https://code.visualstudio.com/](https://code.visualstudio.com/)
+2. Visual Studio Code starten
+3. Unter Extensions (Strg + Shift + X) folgende Plugins installieren:
+   1. Haskell
 
 This is an example of how to list things you need to use the software and how to install them.
 * npm
   ```sh
-  npm install npm@latest -g
+  npm install npm@latest -g hallo
   ```
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
+1. Get a free API Key at [https://example.com](https://example.com) 
 2. Clone the repo
    ```sh
    git clone https://github.com/github_username/repo_name.git
