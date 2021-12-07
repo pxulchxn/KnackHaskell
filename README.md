@@ -26,6 +26,7 @@
         <li><a href="#ablauf">Ablauf</a></li>
         <li><a href="#besonderheiten">Besonderheiten</a></li>
         <li><a href="#spielende">Spielende</a></li>
+        <li><a href="#exakte-spielanleitung">Exakte Spielanleitung</a></li>
       </ul>
     </li>
     <li>
@@ -106,6 +107,10 @@ Sieben | 07
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+### Exakte Spielanleitung
+
+Eine exakte Spielanleitung bitte [hier](https://www.spielanleitung.org/schwimmen.html) entnehmen.
+
 <!-- ---------------------------------------------------------------- GETTING STARTED ---------------------------------------------------------------- -->
 ## Getting Started
 
@@ -114,7 +119,7 @@ Hier beschreiben wir, wie dieses Programm lokal ausführbar gemacht werden kann.
 ### Installation Chocolatey (Windows)
 
 1. Eingabeaufforderung (cmd) als Admin ausführen <br />![Bild cmd](img/windows10cmd.png)
-2. Den Befehl aus dem Pastebin (https://pastebin.com/dqBB532d) kopieren und in die Kommandozeile (cmd) einfügen und dann ausführen.
+2. Den Befehl aus dem [Pastebin](https://pastebin.com/dqBB532d) kopieren und in die Kommandozeile (cmd) einfügen und dann ausführen.
 ```sh
    @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin" 
    ```
@@ -148,7 +153,7 @@ diesem Fall kann der Vorgang mit Strg + C in der Konsole beendet werden.
 
 ### Einrichten von Haskell in Visual Studio Code (Windows)
 
-1. Visual Studio Code herunterladen und installieren: [https://code.visualstudio.com/](https://code.visualstudio.com/)
+1. Visual Studio Code herunterladen und installieren: [Visual Studio Code](https://code.visualstudio.com/)
 2. Visual Studio Code starten
 3. Unter Extensions (Strg + Shift + X) folgende Plugins installieren:
    1. Haskell<br />![Bild Haskell Plugin](img/haskellPlugin.png)
