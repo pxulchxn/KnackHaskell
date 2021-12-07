@@ -31,16 +31,12 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#installation-chocolatey-windows">Installation Chocolatey (Windows)</a></li>
+        <li><a href="#installation-der-haskell-plattform-windows">Installation der Haskell-Plattform (Windows)</a></li>
+        <li><a href="#einrichten-von-haskell-in-visual-studio-code-windows">Einrichten von Haskell in Visual Studio Code (Windows)</a></li>
+        <li><a href="#herunterladen-und-starten-des-programms-windows">Herunterladen und starten des Programms (Windows)</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -151,6 +147,17 @@ diesem Fall kann der Vorgang mit Strg + C in der Konsole beendet werden.
 3. Unter Extensions (Strg + Shift + X) folgende Plugins installieren:
    1. Haskell<br />![Bild Haskell Plugin](img/haskellPlugin.png)
    2. Code Runner <br />![Bild CodeRunner Plugin](img/codeRunnerPlugin.png)
+
+### Herunterladen und starten des Programms (Windows)
+
+1. Herunterladen des Codes.
+2. Code in Visual Studio Code öffnen.
+3. Neues Terminal öffnen und folgendes ausführen:
+  ```sh
+  cabal run
+  ```
+  Dabei werden Inhalte heruntergeladen und anschließend sollte sich das Programm im Terminal darstellen lassen.
+
 
 <!-- 
 README Template: https://github.com/othneildrew/Best-README-Template/blob/master/BLANK_README.md?plain=1
