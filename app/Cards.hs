@@ -51,6 +51,10 @@ hasPlayerWin list n = hasWin (getPlayerCards list n)
 hasWin::[Karte] -> Bool
 hasWin list = getHandsHighestValue list > 31
 
+setPlayerCardsValue::[Karte] -> [Spieler] -> Int -> [(Spieler, Int)]
+setPlayerCardsValue _ [] _ = []
+setPlayerCardsValue cards (x:xs) n = (x, getHandsHighestValue (getPlayerCards cards n)): setPlayerCardsValue cards xs (n+1)
+
 -- returns the truth value of whether new cards have to be placed in the middle
 haveNewCardsToTable::[Karte] -> Int -> Bool
 haveNewCardsToTable cards n = isSIEBENInCards tableCards && isACHTInCards tableCards && isNEUNInCards tableCards

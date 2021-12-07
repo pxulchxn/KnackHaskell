@@ -1,5 +1,6 @@
 module Player where
 import Types
+import Cards
 
 generatePlayerList::Int -> [Spieler]
 generatePlayerList n = generatePlayerListHelp n 1
@@ -39,3 +40,26 @@ setPlayerCheck Spieler{pId=pid, pName=pname, hasCheck=_, hasClosed=closed} check
 
 setPlayerClosed::Spieler -> Spieler
 setPlayerClosed Spieler{pId=pid, pName=pname, hasCheck=check, hasClosed=_} = Spieler{pId=pid, pName=pname, hasCheck=check, hasClosed=True}
+
+rankPlayers::[Karte] -> [Spieler] -> [(Spieler, Int)]
+rankPlayers cards players = quicksort rankedList
+    where rankedList = setPlayerCardsValue cards players 0
+
+rankPlayersToString::(Spieler, Int) -> String 
+rankPlayersToString (player, value) = (getPlayerName player) ++ " hat " ++ show value ++ " Punkte"
+
+getRankPlayerFromList::[(Spieler, Int)] -> Int -> (Spieler, Int)
+getRankPlayerFromList list n = list!!n
+
+quicksort::[(Spieler, Int)] -> [(Spieler, Int)]
+quicksort [] = []
+quicksort (x:xs) = quicksort larger ++ [x] ++ quicksort smaller
+    where
+        smaller = [a | a <- xs, isLower a x]
+        larger = [b | b <- xs, isHigher b x]
+
+isLower::(Spieler, Int) -> (Spieler, Int) -> Bool
+isLower (_, a) (_, b) = a <= b
+
+isHigher::(Spieler, Int) -> (Spieler, Int) -> Bool
+isHigher (_, a) (_, b) = a > b
