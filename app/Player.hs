@@ -26,7 +26,7 @@ setPlayerInList (x:xs) spieler i
     | otherwise = x: setPlayerInList xs spieler (i-1)
 
 hasPlayerAlreadyChecked::Spieler -> Bool
-hasPlayerAlreadyChecked Spieler{hasCheck=check} = check
+hasPlayerAlreadyChecked Spieler{hasCheck=check, hasClosed=closed} = check || closed
 
 hasPlayerAlreadyClosed::Spieler -> Bool
 hasPlayerAlreadyClosed Spieler{hasClosed=closed} = closed
