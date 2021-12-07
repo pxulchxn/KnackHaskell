@@ -122,6 +122,9 @@ Hier beschreiben wir, wie dieses Programm lokal ausführbar gemacht werden kann.
   ```sh
   choco --version
   ```
+  
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 ### Installation der Haskell-Plattform (Windows)
 
 1. Folgenden Befehl in der cmd oder PowerShell eingeben:
@@ -140,6 +143,9 @@ diesem Fall kann der Vorgang mit Strg + C in der Konsole beendet werden.
   ```sh
   cabal --version
   ```
+  
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 ### Einrichten von Haskell in Visual Studio Code (Windows)
 
 1. Visual Studio Code herunterladen und installieren: [https://code.visualstudio.com/](https://code.visualstudio.com/)
@@ -147,6 +153,8 @@ diesem Fall kann der Vorgang mit Strg + C in der Konsole beendet werden.
 3. Unter Extensions (Strg + Shift + X) folgende Plugins installieren:
    1. Haskell<br />![Bild Haskell Plugin](img/haskellPlugin.png)
    2. Code Runner <br />![Bild CodeRunner Plugin](img/codeRunnerPlugin.png)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Herunterladen und starten des Programms (Windows)
 
@@ -158,6 +166,7 @@ diesem Fall kann der Vorgang mit Strg + C in der Konsole beendet werden.
   ```
   Dabei werden Inhalte heruntergeladen und anschließend sollte sich das Programm im Terminal darstellen lassen.
 
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- 
 README Template: https://github.com/othneildrew/Best-README-Template/blob/master/BLANK_README.md?plain=1
