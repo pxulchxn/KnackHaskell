@@ -15,9 +15,9 @@ main = do
     
 
 ioChoosePlayers = do
-    putStrLn "Wie viele Spieler nehmen teil? (2-4)"
+    putStrLn "Wie viele Spieler nehmen teil? (2-7)"
     i <- readLn :: IO Int
-    if (i >= 2 && i <= 4) then do
+    if (i >= 2 && i <= 7) then do
         players <- newIORef (generatePlayerList i)
         ioChoosePlayerNames players 0
     else do
@@ -51,7 +51,7 @@ ioKnack cards players amZug = do
     cardsTmp <- readIORef cards
     playersTmp <- readIORef players
 
-    let name = getPlayerName (getPlayerFromList playersTmp amZug)
+    let name = getPlayerName (getPlayerFromList playersTmp (playerAmZug amZug playersTmp))
     print (length cardsTmp)
     let y = shuffleTableCards cardsTmp (randomNumber ((length cardsTmp)-1)) (length playersTmp)
 
@@ -59,10 +59,10 @@ ioKnack cards players amZug = do
 
     clearScreen
 
-    if (hasPlayerAlreadyClosed (getPlayerFromList playersTmp amZug)) then do
+    if (hasPlayerAlreadyClosed (getPlayerFromList playersTmp (playerAmZug amZug playersTmp))) then do
         ioCloseGame cardsTmp (rankPlayers cardsTmp playersTmp) 0
     else do
-        if (hasPlayerWin cardsTmp amZug) then do
+        if (hasPlayerWin cardsTmp (playerAmZug amZug playersTmp)) then do
             
             putStrLn (name ++ " hat gewonnen!")
             ioCloseGame cardsTmp (rankPlayers cardsTmp playersTmp) 0
@@ -70,20 +70,36 @@ ioKnack cards players amZug = do
             cardsTmp <- readIORef cards
             putStrLn (name ++ " ist am Zug!")
             putStrLn ("Table Cards: " ++ cardsToString (getTableCards cardsTmp (length playersTmp)))
-            putStrLn ("Player Cards: " ++ cardsToString (getPlayerCards cardsTmp amZug))
+            putStrLn ("Player Cards: " ++ cardsToString (getPlayerCards cardsTmp (playerAmZug amZug playersTmp)))
 
             ioSpielzug cards players amZug
     
 -- the player can decide whether he wants to swap cards or end the game (the game status is still saved)
 ioSpielzug cards players amZug = do
-    putStrLn "Commands: swap, check, close, exit"
-    aktion <- getLine
     cardsTmp <- readIORef cards
+    playersTmp <- readIORef players
+
+    let canClose = isRoundOneFinish amZug playersTmp
+    let canCheck = not (hasPlayerAlreadyChecked (getPlayerFromList playersTmp (playerAmZug amZug playersTmp)))
+
+    if (canCheck) then do
+        if(canClose) then
+            putStrLn "Commands: swap, check, close, exit"
+        else
+            putStrLn "Commands: swap, check, exit"
+    else do
+        if(canClose) then
+            putStrLn "Commands: swap, close, exit"
+        else
+            putStrLn "Commands: swap, exit"
+    
+    aktion <- getLine
+    
 
     case () of
        _ | aktion == "swap" -> ioSwap cards players amZug
-         | aktion == "check" -> ioCheck cards players amZug
-         | aktion == "close" -> ioClose cards players amZug
+         | aktion == "check" && canCheck -> ioCheck cards players amZug
+         | aktion == "close" && canClose -> ioClose cards players amZug
          | aktion == "exit" -> putStrLn "Good Bye!"
          | otherwise -> do putStrLn "Wrong Input"
                            ioSpielzug cards players amZug
@@ -103,12 +119,12 @@ ioSwap cards players amZug = do
 ioSwapAllCards cards players amZug = do
     cardsTmp <- readIORef cards
     playersTmp <- readIORef players
-    writeIORef cards (swapAllPlayerWithTableCards cardsTmp amZug (length playersTmp))
+    writeIORef cards (swapAllPlayerWithTableCards cardsTmp (playerAmZug amZug playersTmp) (length playersTmp))
 
-    let player = getPlayerFromList playersTmp amZug
+    let player = getPlayerFromList playersTmp (playerAmZug amZug playersTmp)
     when (hasPlayerAlreadyChecked player) $ do 
         let newPlayer = setPlayerCheck player False
-        writeIORef players (setPlayerInList playersTmp newPlayer amZug)
+        writeIORef players (setPlayerInList playersTmp newPlayer (playerAmZug amZug playersTmp))
 
     finishZug cards players amZug
 
@@ -122,12 +138,12 @@ ioSwapOneCard cards players amZug = do
         putStrLn "Table Cards (1-3)"
         j <- readLn :: IO Int
         if j >= 1 && j <= 3 then do
-            writeIORef cards (swapPlayerWithTableCard cardsTmp i j amZug (length playersTmp))
+            writeIORef cards (swapPlayerWithTableCard cardsTmp i j (playerAmZug amZug playersTmp) (length playersTmp))
 
-            let player = getPlayerFromList playersTmp amZug
+            let player = getPlayerFromList playersTmp (playerAmZug amZug playersTmp)
             when (hasPlayerAlreadyChecked player) $ do 
                 let newPlayer = setPlayerCheck player False
-                writeIORef players (setPlayerInList playersTmp newPlayer amZug)
+                writeIORef players (setPlayerInList playersTmp newPlayer (playerAmZug amZug playersTmp))
 
             finishZug cards players amZug
         else do
@@ -139,22 +155,22 @@ ioSwapOneCard cards players amZug = do
 
 ioCheck cards players amZug = do
     playersTmp <- readIORef players
-    let player = getPlayerFromList playersTmp amZug
+    let player = getPlayerFromList playersTmp (playerAmZug amZug playersTmp)
 
     if(hasPlayerAlreadyChecked player) then do
         putStrLn "You can't check again. Choose another option!"
         ioKnack cards players amZug
     else do
         let newPlayer = setPlayerCheck player True
-        writeIORef players (setPlayerInList playersTmp newPlayer amZug)
+        writeIORef players (setPlayerInList playersTmp newPlayer (playerAmZug amZug playersTmp))
         finishZug cards players amZug
 
 ioClose cards players amZug = do
     playersTmp <- readIORef players
-    let player = getPlayerFromList playersTmp amZug
+    let player = getPlayerFromList playersTmp (playerAmZug amZug playersTmp)
 
     let newPlayer = setPlayerClosed player
-    writeIORef players (setPlayerInList playersTmp newPlayer amZug)
+    writeIORef players (setPlayerInList playersTmp newPlayer (playerAmZug amZug playersTmp))
     finishZug cards players amZug
 
 finishZug cards players amZug = do
@@ -162,8 +178,8 @@ finishZug cards players amZug = do
     playersTmp <- readIORef players
     
 
-    if (hasPlayerWin cardsTmp amZug) then do
-        let name = getPlayerName (getPlayerFromList playersTmp amZug)
+    if (hasPlayerWin cardsTmp (playerAmZug amZug playersTmp)) then do
+        let name = getPlayerName (getPlayerFromList playersTmp (playerAmZug amZug playersTmp))
         clearScreen
         putStrLn (name ++ " hat gewonnen!")
         ioCloseGame cardsTmp (rankPlayers cardsTmp playersTmp) 0
@@ -172,7 +188,7 @@ finishZug cards players amZug = do
 
         cardsTmp <- readIORef cards
 
-        ioKnack cards players (mod (amZug+1) (length playersTmp))
+        ioKnack cards players (amZug+1)
 
 ioCloseGame cardsTmp playersWithValue n = do
     putStrLn (show (n+1) ++ ". " ++ rankPlayersToString (getRankPlayerFromList playersWithValue n))

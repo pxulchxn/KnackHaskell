@@ -63,3 +63,9 @@ isLower (_, a) (_, b) = a <= b
 
 isHigher::(Spieler, Int) -> (Spieler, Int) -> Bool
 isHigher (_, a) (_, b) = a > b
+
+playerAmZug::Int -> [Spieler] -> Int
+playerAmZug zug players = mod (zug) (length players)
+
+isRoundOneFinish::Int -> [Spieler] -> Bool
+isRoundOneFinish zug players = zug >= (length players)
