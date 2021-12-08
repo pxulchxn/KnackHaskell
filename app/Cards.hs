@@ -122,7 +122,7 @@ swapAllPlayerWithTableCards list currentPlayer maxAnzahl = swapPlayerWithTableCa
 swapCards::[Karte] -> Int -> Int -> [Karte]
 swapCards list i j = swapCardsHelp list i j (list!!i) (list!!j) -- wofür steht list!!i und list!!j? 
 
---
+-- swap two cards in array
 swapCardsHelp::[Karte] -> Int -> Int -> Karte -> Karte -> [Karte]
 swapCardsHelp [] _ _ _ _ = []
 swapCardsHelp (x:xs) i j f g
@@ -138,7 +138,7 @@ shuffleTableCards cards n i = (take (3*i) cards) ++ (shuffleCards (drop (3*i) ca
 shuffleCards::[Karte] -> Int -> [Karte]
 shuffleCards list n = shuffleCardsHelp list n
 
--- 
+-- returns a randomly shuffled list
 shuffleCardsHelp::[Karte] -> Int -> [Karte]
 shuffleCardsHelp [] _ = []
 shuffleCardsHelp list n = list!!n: shuffleCardsHelp newList newN

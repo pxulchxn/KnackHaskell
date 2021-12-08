@@ -13,9 +13,11 @@ data Spieler = Spieler {    --neuer Datentyp namens Spieler
     hasClosed::Bool
 } deriving (Show, Eq)
 
+-- return a string of a card
 karteToString::Karte -> String
 karteToString (Karte(typ, name)) = "" ++ show typ ++ " " ++ show name
 
+-- return the value of the card
 kartenWert::Karte -> Int
 kartenWert (Karte(_, a))
     | a == SIEBEN = 7
@@ -24,14 +26,21 @@ kartenWert (Karte(_, a))
     | a == ASS = 12
     | otherwise = 10
 
+
+-- return the card name
 getName::Karte -> Name
 getName (Karte(_, name)) = name
 
+
+-- return the card type
 getTyp::Karte -> Typ
 getTyp (Karte(typ, _)) = typ
 
+
+-- return true when the card type and the given typ are equal
 sameTyp::Karte -> Typ -> Bool
 sameTyp (Karte(typ, _)) mainTyp = typ == mainTyp
 
+-- return true when the card name and the given name are equal
 sameName::Karte -> Name -> Bool
 sameName (Karte(_, name)) mainName = name == mainName

@@ -13,7 +13,7 @@ main = do
     clearScreen
     ioChoosePlayers
     
-
+-- choose amount of players
 ioChoosePlayers = do
     putStrLn "Wie viele Spieler nehmen teil? (2-7)"
     i <- readLn :: IO Int
@@ -24,6 +24,7 @@ ioChoosePlayers = do
         putStrLn "Wrong Input!"
         ioChoosePlayers
 
+-- choose name for each player
 ioChoosePlayerNames players n = do
     playersTmp <- readIORef players
     if (n < (length playersTmp)) then do
@@ -37,6 +38,7 @@ ioChoosePlayerNames players n = do
         print playersTmp
         ioGenerateCards players
 
+-- initialize game
 ioGenerateCards players = do
     let x = generateCards
     let rndNumber = randomNumber (length x-1)
@@ -153,6 +155,7 @@ ioSwapOneCard cards players amZug = do
         putStrLn "Wrong Input!"
         ioSwapOneCard cards players amZug
 
+-- player skip his turn
 ioCheck cards players amZug = do
     playersTmp <- readIORef players
     let player = getPlayerFromList playersTmp (playerAmZug amZug playersTmp)
@@ -165,6 +168,7 @@ ioCheck cards players amZug = do
         writeIORef players (setPlayerInList playersTmp newPlayer (playerAmZug amZug playersTmp))
         finishZug cards players amZug
 
+-- player close the game
 ioClose cards players amZug = do
     playersTmp <- readIORef players
     let player = getPlayerFromList playersTmp (playerAmZug amZug playersTmp)
@@ -173,6 +177,7 @@ ioClose cards players amZug = do
     writeIORef players (setPlayerInList playersTmp newPlayer (playerAmZug amZug playersTmp))
     finishZug cards players amZug
 
+-- the end of a players turn
 finishZug cards players amZug = do
     cardsTmp <- readIORef cards
     playersTmp <- readIORef players
@@ -190,6 +195,7 @@ finishZug cards players amZug = do
 
         ioKnack cards players (amZug+1)
 
+-- close game
 ioCloseGame cardsTmp playersWithValue n = do
     putStrLn (show (n+1) ++ ". " ++ rankPlayersToString (getRankPlayerFromList playersWithValue n))
     
